@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ví Sinh Viên - Quản lý chi tiêu thông minh</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              200: '#bae0fd',
+              300: '#7cc5fd',
+              400: '#38bdf8',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+              900: '#1e3a5f',
+              dark: '#0f172a'
+            }
+          },
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Google Font: Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+      background-color: #f1f6fd;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    @media print {
+      body * { visibility: hidden; }
+      #print-area, #print-area * { visibility: visible; }
+      #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-700 min-h-screen flex flex-col antialiased select-none">
+
+  <!-- ==================== 1. MÀN HÌNH ĐĂNG NHẬP ==================== -->
+  <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-blue-100 via-sky-50 to-indigo-100 overflow-y-auto">
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-blue-100">
+      
+      <!-- Cột giới thiệu bên trái -->
+      <div class="bg-gradient-to-br from-sky-500 via-brand-600 to-indigo-700 p-8 sm:p-12 flex flex-col justify-between text-white relative">
+        <div class="relative z-10">
+          <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+            <i class="fa-solid fa-wallet text-3xl text-white"></i>
+          </div>
+          <h1 class="text-3xl font-extrabold tracking-tight mb-2">Ví Sinh Viên</h1>
+          <p class="text-blue-100 text-sm leading-relaxed">
+            Quản lý chi tiêu thông minh - Cho cuộc sống sinh viên dễ dàng hơn! Không lo thiếu trước hụt sau cuối tháng.
+          </p>
+        </div>
+
+        <div class="relative z-10 my-8 flex justify-center items-center">
+          <div class="w-44 h-36 bg-white/15 backdrop-blur-md rounded-2xl shadow-xl flex flex-col items-center justify-center border border-white/20">
+            <i class="fa-solid fa-graduation-cap text-5xl text-amber-300 drop-shadow mb-2"></i>
+            <span class="text-xs font-bold text-white bg-white/20 px-3 py-1 rounded-full">Tiết kiệm & Cân đối</span>
+          </div>
+        </div>
+
+        <div class="text-xs text-blue-100/90 relative z-10 flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved"></i> Thuật toán cân đối tự động • Không lo thâm hụt
+        </div>
+      </div>
+
+      <!-- Cột Form Đăng Nhập bên phải -->
+      <div class="p-8 sm:p-12 flex flex-col justify-center">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-slate-800">Đăng nhập</h2>
+          <p class="text-sm text-slate-500 mt-1">Chào mừng bạn quay trở lại!</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Email hoặc tên đăng nhập</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-regular fa-envelope"></i>
+              </span>
+              <input type="text" id="loginUsername" value="Nhi Yen" placeholder="Nhập tên của bạn" 
+                     class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Mật khẩu</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-solid fa-lock"></i>
+              </span>
+              <input type="password" id="loginPassword" value="123456" placeholder="Mật khẩu" 
+                     class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+              <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600">
+                <i id="eyeIcon" class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs pt-1">
+            <label class="flex items-center gap-2 cursor-pointer text-slate-600">
+              <input type="checkbox" checked class="rounded text-brand-600 focus:ring-brand-500">
+              Ghi nhớ đăng nhập
+            </label>
+            <a href="javascript:void(0)" onclick="showToast('Mật khẩu mặc định: 123456')" class="text-brand-600 font-semibold hover:underline">Quên mật khẩu?</a>
+          </div>
+
+          <button type="button" onclick="handleLoginAction()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white font-semibold rounded-xl shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 text-sm transition cursor-pointer">
+            <span>Đăng nhập</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+        <div class="relative my-5 text-center">
+          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+          <span class="relative px-3 bg-white text-xs text-slate-400 font-medium">hoặc</span>
+        </div>
+
+        <button onclick="handleLoginAction()" type="button" class="w-full py-2.5 border-2 border-brand-500/30 hover:border-brand-500 text-brand-700 font-semibold rounded-xl text-sm flex items-center justify-center gap-2 transition hover:bg-brand-50/50 cursor-pointer active:scale-[0.98]">
+          <i class="fa-solid fa-bolt text-amber-500 text-xs"></i>
+          <span>Vào thẳng ứng dụng (Không cần tài khoản)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2. KHUNG ỨNG DỤNG CHÍNH ==================== -->
+  <div id="mainApp" class="flex-1 flex flex-col md:flex-row min-h-screen">
+    
+    <!-- SIDEBAR BÊN TRÁI -->
+    <aside id="appSidebar" class="w-full md:w-64 bg-slate-900 text-white flex flex-col justify-between shrink-0 z-20">
+      <div>
+        <!-- Logo -->
+        <div class="p-6 flex items-center gap-3.5 border-b border-slate-800">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-sky-400 flex items-center justify-center shadow-lg">
+            <i class="fa-solid fa-wallet text-white text-lg"></i>
+          </div>
+          <div>
+            <h1 class="font-bold text-base tracking-wide text-white">Ví Sinh Viên</h1>
+            <p class="text-[11px] text-slate-400">Quản lý chi tiêu số</p>
+          </div>
+        </div>
+
+        <!-- Menu Tabs -->
+        <nav class="p-4 space-y-1.5 text-sm font-medium">
+          <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl transition bg-brand-600 text-white shadow-md">
+            <i class="fa-solid fa-house w-5 text-center text-base"></i>
+            <span>Trang chủ</span>
+          </button>
+
+          <button onclick="switchTab('plan-setup')" id="nav-plan-setup" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/70">
+            <i class="fa-regular fa-calendar-plus w-5 text-center text-base"></i>
+            <span>Lập kế hoạch</span>
+          </button>
+
+          <button onclick="switchTab('plan-result')" id="nav-plan-result" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/70">
+            <i class="fa-solid fa-table-list w-5 text-center text-base"></i>
+            <span>Kế hoạch chi tiêu</span>
+          </button>
+
+          <button onclick="switchTab('banking')" id="nav-banking" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/70 relative">
+            <i class="fa-solid fa-building-columns w-5 text-center text-base text-sky-400"></i>
+            <span>Liên kết ngân hàng</span>
+            <span class="ml-auto text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full font-bold">Mới</span>
+          </button>
+
+          <button onclick="switchTab('statistics')" id="nav-statistics" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/70">
+            <i class="fa-solid fa-chart-pie w-5 text-center text-base"></i>
+            <span>Thống kê</span>
+          </button>
+
+          <button onclick="switchTab('settings')" id="nav-settings" class="nav-item w-full flex items-center gap-3.5 px-4 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/70">
+            <i class="fa-solid fa-gear w-5 text-center text-base"></i>
+            <span>Cài đặt</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- User footer & Đăng xuất -->
+      <div class="p-4 border-t border-slate-800">
+        <div class="flex items-center gap-3 px-3 py-2 mb-2">
+          <div class="w-8 h-8 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center font-bold text-sky-300 text-xs" id="userAvatarText">
+            NY
+          </div>
+          <div class="truncate">
+            <p class="text-xs font-semibold text-slate-200 truncate" id="sidebarUserName">Nhi Yen</p>
+            <p class="text-[10px] text-emerald-400 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Đã kết nối ví
+            </p>
+          </div>
+        </div>
+        <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Đăng xuất</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH (MAIN) -->
+    <main class="flex-1 flex flex-col overflow-y-auto max-h-screen">
+      
+      <!-- Top header di động & hành động nhanh -->
+      <header class="bg-white/90 backdrop-blur-md sticky top-0 z-10 border-b border-slate-200/80 px-4 sm:px-6 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleMobileMenu()" class="md:hidden text-slate-600 hover:text-slate-900 focus:outline-none">
+            <i class="fa-solid fa-bars text-lg"></i>
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="text-xs bg-brand-100 text-brand-700 font-bold px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+              <i class="fa-solid fa-wallet text-[11px]"></i> Ví Sinh Viên
+            </span>
+            <span class="text-xs text-slate-400 hidden sm:inline">• Quản lý ngân sách thông minh</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="relative">
+            <select id="periodSelector" onchange="changePeriod(this.value)" class="text-xs bg-slate-100 hover:bg-slate-200 border-0 rounded-xl px-2.5 py-2 font-medium text-slate-700 cursor-pointer focus:ring-2 focus:ring-brand-500 transition">
+              <option value="current">Tuần này (27/10 – 02/11)</option>
+              <option value="next">Tuần tới (03/11 – 09/11)</option>
+              <option value="month">Cả tháng này</option>
+            </select>
+          </div>
+
+          <button onclick="openDepositModal()" class="px-3 py-2 bg-brand-600 hover:bg-brand-700 active:scale-95 text-white rounded-xl text-xs font-semibold shadow-sm flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-plus-circle text-xs"></i>
+            <span>Nạp tiền</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- KHU VỰC CÁC TAB -->
+      <div class="p-4 sm:p-6 lg:p-8 flex-1">
+
+        <!-- ==================== TAB 1: TRANG CHỦ ==================== -->
+        <div id="tab-dashboard" class="tab-content space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 flex items-center gap-2">
+                Xin chào, <span id="welcomeUserName" class="text-brand-600">Nhi Yen</span>! <span class="animate-bounce">👋</span>
+              </h2>
+              <p class="text-slate-500 text-sm mt-1">Chúc bạn một tuần học tập hiệu quả và chi tiêu thật cân đối!</p>
+            </div>
+            
+            <button onclick="switchTab('plan-setup')" class="px-4 py-2.5 bg-gradient-to-r from-brand-600 to-sky-500 hover:from-brand-700 hover:to-sky-600 text-white rounded-xl text-sm font-semibold shadow-md flex items-center gap-2 transition self-start sm:self-auto">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Lập kế hoạch chi tiêu</span>
+            </button>
+          </div>
+
+          <!-- 3 Thẻ tóm tắt tài chính -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group hover:shadow-md transition">
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Số tiền hiện có trong ví</p>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-1" id="dashBalanceDisplay">500.000đ</h3>
+                <p class="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-1" id="dashCycleHint">
+                  <i class="fa-solid fa-arrow-trend-up"></i> Chu kỳ: Theo tuần (7 ngày)
+                </p>
+              </div>
+              <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                <i class="fa-solid fa-wallet"></i>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group hover:shadow-md transition">
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hạn mức an toàn / ngày</p>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-brand-600 mt-1" id="dashDailySafeDisplay">71.000đ</h3>
+                <p class="text-xs text-brand-600 font-medium mt-1 flex items-center gap-1">
+                  <i class="fa-regular fa-calendar-check"></i> Đảm bảo không lố ngân sách
+                </p>
+              </div>
+              <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                <i class="fa-solid fa-scale-balanced"></i>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group hover:shadow-md transition sm:col-span-2 lg:col-span-1">
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Quỹ tiết kiệm / Dự phòng</p>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1" id="dashSavingsDisplay">0đ</h3>
+                <p class="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1">
+                  <i class="fa-solid fa-piggy-bank text-pink-500"></i> Dự phòng phát sinh
+                </p>
+              </div>
+              <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phân bổ tỷ lệ & Mascot Mèo khuyên nhủ -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Tỷ lệ chi tiêu đề xuất -->
+            <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                  <i class="fa-solid fa-chart-pie text-brand-600"></i>
+                  <span>Tổng quan chi tiêu đề xuất</span>
+                </h3>
+                <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">Tỷ lệ 100%</span>
+              </div>
+
+              <!-- Thanh trực quan tỷ lệ phân bổ -->
+              <div class="space-y-4 my-auto">
+                <div class="h-4 w-full bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+                  <div id="barFood" style="width: 70%" class="bg-sky-400 transition-all duration-500" title="Ăn uống"></div>
+                  <div id="barTransport" style="width: 15%" class="bg-blue-600 transition-all duration-500" title="Đi lại"></div>
+                  <div id="barFixed" style="width: 0%" class="bg-purple-500 transition-all duration-500" title="Trọ & Điện nước"></div>
+                  <div id="barSavings" style="width: 15%" class="bg-emerald-400 transition-all duration-500" title="Tiết kiệm & Khác"></div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-2">
+                  <div class="p-2.5 rounded-xl bg-sky-50 border border-sky-100">
+                    <div class="flex items-center gap-1.5 font-semibold text-sky-800 mb-0.5">
+                      <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> Ăn uống
+                    </div>
+                    <span class="text-base font-bold text-slate-800" id="legFood">70%</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-blue-50 border border-blue-100">
+                    <div class="flex items-center gap-1.5 font-semibold text-blue-800 mb-0.5">
+                      <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> Đi lại / Xăng
+                    </div>
+                    <span class="text-base font-bold text-slate-800" id="legTransport">15%</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-purple-50 border border-purple-100">
+                    <div class="flex items-center gap-1.5 font-semibold text-purple-800 mb-0.5">
+                      <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> Trọ & Điện
+                    </div>
+                    <span class="text-base font-bold text-slate-800" id="legLiving">0%</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100">
+                    <div class="flex items-center gap-1.5 font-semibold text-emerald-800 mb-0.5">
+                      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Tiết kiệm/Khác
+                    </div>
+                    <span class="text-base font-bold text-slate-800" id="legSavings">15%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>Ngân sách kiểm soát nghiêm ngặt</span>
+                <button onclick="switchTab('plan-setup')" class="text-brand-600 font-semibold hover:underline">Chỉnh sửa khoản chi →</button>
+              </div>
+            </div>
+
+            <!-- Gợi ý hôm nay (Mascot Mèo Sinh Viên) -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center gap-2 text-amber-600 font-bold text-sm">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-base"></i>
+                <span>Gợi ý hôm nay</span>
+              </div>
+
+              <div class="my-3">
+                <p class="text-slate-800 text-sm font-semibold mb-1" id="catAdviceTitle">
+                  Bạn đang chi tiêu rất hợp lý! 🎉
+                </p>
+                <p class="text-slate-600 text-xs leading-relaxed" id="catAdviceBody">
+                  Số tiền đã được chia đều cho từng ngày trong tuần. Hãy tự nấu ăn tại phòng trọ để vừa ngon vừa tiết kiệm tiền nhé!
+                </p>
+              </div>
+
+              <!-- Mascot Mèo Sinh Viên Vẽ Bằng SVG Tinh Xảo -->
+              <div class="flex justify-center items-end py-1">
+                <div class="w-40 h-32">
+                  <svg viewBox="0 0 200 160" class="w-full h-full drop-shadow-sm">
+                    <polygon points="50,60 70,15 95,50" fill="#cbd5e1" stroke="#475569" stroke-width="3" stroke-linejoin="round"/>
+                    <polygon points="58,55 70,26 88,48" fill="#fda4af"/>
+                    <polygon points="150,60 130,15 105,50" fill="#cbd5e1" stroke="#475569" stroke-width="3" stroke-linejoin="round"/>
+                    <polygon points="142,55 130,26 112,48" fill="#fda4af"/>
+                    <ellipse cx="100" cy="85" rx="60" ry="48" fill="#ffffff" stroke="#475569" stroke-width="3"/>
+                    <path d="M 75 78 Q 85 70 93 78" fill="none" stroke="#334155" stroke-width="3.5" stroke-linecap="round"/>
+                    <path d="M 107 78 Q 115 70 125 78" fill="none" stroke="#334155" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="70" cy="90" r="7" fill="#fecdd3" opacity="0.8"/>
+                    <circle cx="130" cy="90" r="7" fill="#fecdd3" opacity="0.8"/>
+                    <polygon points="98,87 102,87 100,90" fill="#f43f5e"/>
+                    <path d="M 94 92 Q 100 97 100 92 Q 100 97 106 92" fill="none" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="50" y1="84" x2="30" y2="80" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="50" y1="90" x2="32" y2="92" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="150" y1="84" x2="170" y2="80" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="150" y1="90" x2="168" y2="92" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M 68 135 C 68 122 84 122 84 135 Z" fill="#ffffff" stroke="#475569" stroke-width="2.5"/>
+                    <path d="M 116 135 C 116 122 132 122 132 135 Z" fill="#ffffff" stroke="#475569" stroke-width="2.5"/>
+                    <path d="M 160 40 Q 165 35 170 40 Q 175 35 180 40 Q 170 55 170 55 Z" fill="#f43f5e" opacity="0.75"/>
+                    <path d="M 25 50 Q 28 46 32 50 Q 36 46 40 50 Q 32 62 32 62 Z" fill="#38bdf8" opacity="0.65"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <span id="catCheerText" class="inline-block text-[11px] font-medium text-brand-700 bg-white/80 px-3 py-1 rounded-full shadow-xs">
+                  Cố gắng giữ vững phong độ nhé 💙
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 2: LẬP KẾ HOẠCH CHI TIÊU ==================== -->
+        <div id="tab-plan-setup" class="tab-content hidden space-y-6">
+          <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm max-w-4xl mx-auto">
+            
+            <div class="border-b border-slate-100 pb-5 mb-6">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center text-lg">
+                  <i class="fa-regular fa-calendar-plus"></i>
+                </div>
+                <div>
+                  <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Lập kế hoạch chi tiêu</h2>
+                  <p class="text-xs sm:text-sm text-slate-500">Hãy nhập số tiền và chọn các khoản bạn cần chi trong tháng/tuần này nhé!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- FORM LẬP KẾ HOẠCH -->
+            <div class="space-y-6">
+              
+              <!-- Khung chọn chu kỳ & số tiền -->
+              <div class="p-5 bg-gradient-to-r from-blue-50 to-indigo-50/50 rounded-2xl border border-blue-100">
+                <p class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Bạn có bao nhiêu tiền?</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                  <!-- Radio chọn kỳ -->
+                  <div class="md:col-span-5 flex items-center gap-6">
+                    <label class="flex items-center gap-2 text-sm font-semibold text-slate-700 cursor-pointer">
+                      <input type="radio" name="planCycle" value="week" checked onchange="handleCycleChange('week')" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
+                      <span>Theo tuần</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm font-semibold text-slate-700 cursor-pointer">
+                      <input type="radio" name="planCycle" value="month" onchange="handleCycleChange('month')" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
+                      <span>Theo tháng</span>
+                    </label>
+                  </div>
+
+                  <!-- Input nhập ngân sách -->
+                  <div class="md:col-span-7 relative">
+                    <input type="text" id="budgetAmountFormatted" value="500.000" oninput="handleCurrencyInput(this)"
+                           class="w-full pl-4 pr-12 py-3 rounded-xl border border-slate-300 font-bold text-slate-800 text-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white shadow-xs">
+                    <input type="hidden" id="budgetAmount" value="500000">
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">đ</span>
+                  </div>
+                </div>
+                <div class="mt-2 text-[11px] text-slate-500 italic" id="cycleExplainText">
+                  💡 Thuật toán cam kết: Tổng tiền chi tiêu 7 ngày tuyệt đối KHÔNG VƯỢT QUÁ số tiền bạn nhập.
+                </div>
+              </div>
+
+              <!-- Cảnh báo nếu ngân sách không đủ chi trả khoản cứng -->
+              <div id="budgetWarningBox" class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-3">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500 text-base shrink-0"></i>
+                <span id="budgetWarningText">Số tiền bạn nhập không đủ để trả các khoản cố định (như tiền trọ). Hãy kiểm tra lại!</span>
+              </div>
+
+              <!-- Danh mục chi tiêu sinh viên -->
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Chọn các khoản chi tiêu (Có thể bỏ qua mục không cần thiết):
+                  </label>
+                  <span class="text-[11px] text-slate-400">Tự động cân bằng theo ví</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                  
+                  <!-- Mục 1: Ăn uống -->
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white cursor-pointer transition flex items-start gap-3 shadow-xs">
+                    <input type="checkbox" id="cat_food" checked class="mt-1 w-4 h-4 rounded text-brand-600">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                        <i class="fa-solid fa-utensils text-amber-500"></i>
+                        <span>Ăn uống</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">Tự động co giãn theo ngân sách</p>
+                    </div>
+                  </label>
+
+                  <!-- Mục 2: Số tiền xăng hằng tuần -->
+                  <div class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white transition flex flex-col justify-between shadow-xs">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" id="cat_transport" checked class="mt-1 w-4 h-4 rounded text-brand-600">
+                      <div>
+                        <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                          <i class="fa-solid fa-gas-pump text-blue-500"></i>
+                          <span>Số tiền xăng hằng tuần</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Xăng xe máy / Vé xe buýt</p>
+                      </div>
+                    </label>
+                    <div class="mt-2 flex items-center gap-1.5 text-xs">
+                      <span class="text-slate-500 text-[11px]">Tiền xăng:</span>
+                      <input type="number" id="transportWeeklyAmount" value="70000" step="10000" class="w-24 px-2 py-1 rounded-lg border border-slate-200 text-right font-bold text-xs focus:ring-1 focus:ring-brand-500">
+                      <span class="text-slate-400 text-[11px]">đ/tuần</span>
+                    </div>
+                  </div>
+
+                  <!-- Mục 3: Tiết kiệm -->
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white cursor-pointer transition flex items-start gap-3 shadow-xs">
+                    <input type="checkbox" id="cat_savings" class="mt-1 w-4 h-4 rounded text-brand-600">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                        <i class="fa-solid fa-piggy-bank text-emerald-500"></i>
+                        <span>Tiết kiệm</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">Trích quỹ nhỏ dự phòng phát sinh</p>
+                    </div>
+                  </label>
+
+                  <!-- Mục 4: Đóng tiền trọ -->
+                  <div class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white transition flex flex-col justify-between shadow-xs">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" id="cat_rent" class="mt-1 w-4 h-4 rounded text-brand-600">
+                      <div>
+                        <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                          <i class="fa-solid fa-house-user text-purple-500"></i>
+                          <span>Đóng trọ</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5" id="rentCycleHint">Tháng chỉ đóng 1 lần</p>
+                      </div>
+                    </label>
+                    <div class="mt-2 flex items-center gap-1.5 text-xs">
+                      <span class="text-slate-500 text-[11px]">Tiền trọ:</span>
+                      <input type="number" id="rentAmount" value="1500000" step="50000" class="w-28 px-2 py-1 rounded-lg border border-slate-200 text-right font-bold text-xs focus:ring-1 focus:ring-brand-500">
+                      <span class="text-slate-400 text-[11px]">đ</span>
+                    </div>
+                  </div>
+
+                  <!-- Mục 5: Tiền điện nước -->
+                  <div class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white transition flex flex-col justify-between shadow-xs">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" id="cat_utilities" class="mt-1 w-4 h-4 rounded text-brand-600">
+                      <div>
+                        <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                          <i class="fa-solid fa-bolt text-amber-500"></i>
+                          <span>Tiền điện nước</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Khoản cố định</p>
+                      </div>
+                    </label>
+                    <div class="mt-2 flex items-center gap-1.5 text-xs">
+                      <span class="text-slate-500 text-[11px]">Ước tính:</span>
+                      <input type="number" id="utilitiesAmount" value="150000" step="10000" class="w-24 px-2 py-1 rounded-lg border border-slate-200 text-right font-bold text-xs focus:ring-1 focus:ring-brand-500">
+                      <span class="text-slate-400 text-[11px]">đ</span>
+                    </div>
+                  </div>
+
+                  <!-- Mục 6: Mua đồ dùng học tập -->
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white cursor-pointer transition flex items-start gap-3 shadow-xs">
+                    <input type="checkbox" id="cat_study" class="mt-1 w-4 h-4 rounded text-brand-600">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                        <i class="fa-solid fa-book-open text-sky-500"></i>
+                        <span>Mua đồ dùng học tập</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">Photo giáo trình, bút vở</p>
+                    </div>
+                  </label>
+
+                  <!-- Mục 7: Sinh hoạt khác -->
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white cursor-pointer transition flex items-start gap-3 shadow-xs">
+                    <input type="checkbox" id="cat_social" class="mt-1 w-4 h-4 rounded text-brand-600">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                        <i class="fa-solid fa-bag-shopping text-pink-500"></i>
+                        <span>Sinh hoạt khác</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">Xà phòng, kem đánh răng...</p>
+                    </div>
+                  </label>
+
+                  <!-- Mục 8: Nạp Data 4G -->
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white cursor-pointer transition flex items-start gap-3 shadow-xs">
+                    <input type="checkbox" id="cat_phone" class="mt-1 w-4 h-4 rounded text-brand-600">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                        <i class="fa-solid fa-mobile-screen-button text-cyan-500"></i>
+                        <span>Nạp Data 4G</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">Gói cước sinh viên</p>
+                    </div>
+                  </label>
+
+                  <!-- Mục 9: Khác... -->
+                  <div class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-white transition flex flex-col justify-between shadow-xs">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" id="cat_custom" class="mt-1 w-4 h-4 rounded text-brand-600">
+                      <div>
+                        <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+                          <i class="fa-solid fa-ellipsis text-slate-500"></i>
+                          <span>Khác...</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Nhập nội dung tùy chọn</p>
+                      </div>
+                    </label>
+                    <input type="text" id="customCatName" placeholder="Nhập nội dung" class="mt-2 px-2.5 py-1 text-xs rounded-lg border border-slate-200 focus:outline-none">
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- NÚT BẤM TẠO KẾ HOẠCH -->
+              <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button type="button" onclick="executeGeneratePlan()" id="btnGeneratePlan" class="w-full sm:w-auto px-10 py-3.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 text-sm transition active:scale-95 cursor-pointer">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <span>Tạo kế hoạch</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 3: KẾT QUẢ KẾ HOẠCH CHI TIÊU TỪNG NGÀY ==================== -->
+        <div id="tab-plan-result" class="tab-content hidden space-y-6">
+          <div id="print-area" class="space-y-6">
+            
+            <!-- Banner tóm tắt & Bộ lọc tuần -->
+            <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                  <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                  <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Kế hoạch chi tiêu của bạn</h2>
+                  <p class="text-xs sm:text-sm text-slate-500" id="planScopeSubtitle">Chi tiêu hợp lý – Sống thoải mái!</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <div id="monthWeekFilterContainer" class="hidden">
+                  <select id="monthWeekSelect" onchange="renderSpecificWeek(parseInt(this.value))" class="px-3 py-2 bg-slate-100 border border-slate-200 text-slate-700 font-semibold rounded-xl text-xs focus:ring-2 focus:ring-brand-500">
+                    <option value="1">Tuần 1 (Ngày 1 - 7)</option>
+                    <option value="2">Tuần 2 (Ngày 8 - 14)</option>
+                    <option value="3">Tuần 3 (Ngày 15 - 21)</option>
+                    <option value="4">Tuần 4 (Ngày 22 - 30)</option>
+                  </select>
+                </div>
+                <button onclick="window.print()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                  <i class="fa-solid fa-download text-brand-600"></i>
+                  <span>Tải xuống PDF</span>
+                </button>
+                <button onclick="switchTab('plan-setup')" class="px-3.5 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                  <i class="fa-solid fa-sliders"></i>
+                  <span>Điều chỉnh</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3 Thẻ thống kê giống mockup -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-xl">
+                  <i class="fa-solid fa-coins"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-400 font-semibold uppercase">Tổng ngân sách</p>
+                  <p class="text-xl font-extrabold text-slate-800" id="resTotalBudget">500.000đ</p>
+                </div>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-brand-600 flex items-center justify-center text-xl">
+                  <i class="fa-solid fa-receipt"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-400 font-semibold uppercase">Chi tiêu dự kiến</p>
+                  <p class="text-xl font-extrabold text-brand-600" id="resTotalExpense">500.000đ</p>
+                </div>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                  <i class="fa-solid fa-piggy-bank"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-400 font-semibold uppercase">Tiết kiệm</p>
+                  <p class="text-xl font-extrabold text-emerald-600" id="resSavingsAmount">0đ</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- BẢNG KẾ HOẠCH CHI TIÊU TỪNG NGÀY -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+              <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i class="fa-regular fa-calendar-days text-brand-600"></i>
+                  <h3 class="font-bold text-slate-800 text-sm sm:text-base" id="planTableTitle">Kế hoạch chi tiêu từng ngày</h3>
+                </div>
+                <span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full font-semibold" id="planBadgeText">
+                  ✓ Khớp 100% ngân sách
+                </span>
+              </div>
+
+              <div class="overflow-x-auto custom-scroll">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-semibold border-b border-slate-200">
+                    <tr>
+                      <th class="py-3.5 px-4">Ngày</th>
+                      <th class="py-3.5 px-4 text-center">Ăn uống</th>
+                      <th class="py-3.5 px-4 text-center">Đi lại</th>
+                      <th class="py-3.5 px-4 text-center">Đóng trọ</th>
+                      <th class="py-3.5 px-4 text-center">Tiền điện nước</th>
+                      <th class="py-3.5 px-4 text-center">Khác</th>
+                      <th class="py-3.5 px-4 text-right font-bold">Tổng chi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dailyPlanTableBody" class="divide-y divide-slate-100 text-slate-700">
+                    <!-- JavaScript sẽ tự render các hàng tại đây -->
+                  </tbody>
+                  <tfoot class="bg-slate-50 font-bold text-slate-800 border-t-2 border-slate-200 text-xs sm:text-sm">
+                    <tr>
+                      <td class="py-3.5 px-4" id="footCycleLabel">TỔNG CỘNG</td>
+                      <td class="py-3.5 px-4 text-center text-amber-600" id="footFoodTotal">0đ</td>
+                      <td class="py-3.5 px-4 text-center text-blue-600" id="footTransportTotal">0đ</td>
+                      <td class="py-3.5 px-4 text-center text-purple-600" id="footRentTotal">-</td>
+                      <td class="py-3.5 px-4 text-center text-sky-600" id="footUtilTotal">-</td>
+                      <td class="py-3.5 px-4 text-center text-slate-600" id="footOtherTotal">0đ</td>
+                      <td class="py-3.5 px-4 text-right text-brand-700 text-base font-extrabold" id="footGrandTotal">0đ</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <!-- Cam kết hợp lý -->
+            <div class="p-4 rounded-2xl bg-brand-50 border border-brand-200 flex items-center gap-3 text-brand-900 text-xs sm:text-sm">
+              <i class="fa-solid fa-circle-check text-brand-600 text-lg shrink-0"></i>
+              <span id="planSummaryCommitment">Bạn đã phân bổ chi tiêu hợp lý trong ngân sách của mình! 💙</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ==================== TAB 4: LIÊN KẾT NGÂN HÀNG & NẠP TIỀN ==================== -->
+        <div id="tab-banking" class="tab-content hidden space-y-6">
+          <div class="max-w-4xl mx-auto space-y-6">
+            
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0">
+                  <i class="fa-solid fa-building-columns"></i>
+                </div>
+                <div>
+                  <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Tài khoản & Ngân hàng liên kết</h2>
+                  <p class="text-xs sm:text-sm text-slate-500">Nạp tiền vào Ví Sinh Viên nhanh chóng, an toàn và hoàn toàn miễn phí</p>
+                </div>
+              </div>
+              <button onclick="openBankLinkModal()" class="px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs sm:text-sm font-semibold shadow-md flex items-center gap-2 transition active:scale-95">
+                <i class="fa-solid fa-plus"></i>
+                <span>Thêm liên kết mới</span>
+              </button>
+            </div>
+
+            <!-- Thẻ ngân hàng liên kết -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="linkedAccountsList">
+              <!-- Thẻ MB Bank -->
+              <div class="p-6 rounded-3xl bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 text-white shadow-xl relative overflow-hidden flex flex-col justify-between h-52 border border-blue-400/20">
+                <div class="flex items-center justify-between relative z-10">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-9 h-9 rounded-xl bg-white text-blue-700 flex items-center justify-center font-black text-sm shadow">MB</span>
+                    <span class="font-bold text-base tracking-wide">MB Bank</span>
+                  </div>
+                  <span class="text-[11px] bg-emerald-400/20 text-emerald-300 border border-emerald-400/40 px-2.5 py-0.5 rounded-full font-semibold">Đã liên kết</span>
+                </div>
+                <div class="relative z-10">
+                  <p class="text-[10px] text-slate-300 uppercase tracking-widest font-semibold">Số tài khoản sinh viên</p>
+                  <p class="text-xl font-mono tracking-widest font-bold mt-1">•••• •••• •••• 8899</p>
+                </div>
+                <div class="flex items-center justify-between relative z-10 pt-3 border-t border-white/15 text-xs">
+                  <div>
+                    <span class="text-[10px] text-slate-300">Chủ tài khoản: </span>
+                    <span class="font-bold" id="bankCardOwner">NHI YEN</span>
+                  </div>
+                  <button onclick="quickDepositFromBank('MB Bank', 200000)" class="px-3 py-1.5 bg-white text-blue-800 font-bold rounded-xl text-xs hover:bg-slate-100 transition shadow active:scale-95 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-down-to-bracket text-[10px]"></i> Nạp 200k
+                  </button>
+                </div>
+              </div>
+
+              <!-- Thẻ MoMo -->
+              <div class="p-6 rounded-3xl bg-gradient-to-br from-pink-600 via-rose-600 to-purple-800 text-white shadow-xl relative overflow-hidden flex flex-col justify-between h-52 border border-pink-400/20">
+                <div class="flex items-center justify-between relative z-10">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-9 h-9 rounded-xl bg-white text-pink-600 flex items-center justify-center font-black text-sm shadow">M</span>
+                    <span class="font-bold text-base tracking-wide">Ví MoMo</span>
+                  </div>
+                  <span class="text-[11px] bg-emerald-400/20 text-emerald-300 border border-emerald-400/40 px-2.5 py-0.5 rounded-full font-semibold">Đã liên kết</span>
+                </div>
+                <div class="relative z-10">
+                  <p class="text-[10px] text-slate-200 uppercase tracking-widest font-semibold">Số điện thoại liên kết</p>
+                  <p class="text-xl font-mono tracking-widest font-bold mt-1">0987 ••• 321</p>
+                </div>
+                <div class="flex items-center justify-between relative z-10 pt-3 border-t border-white/15 text-xs">
+                  <div>
+                    <span class="text-[10px] text-slate-200">Ví sinh viên: </span>
+                    <span class="font-bold">Đã kích hoạt</span>
+                  </div>
+                  <button onclick="quickDepositFromBank('Ví MoMo', 100000)" class="px-3 py-1.5 bg-white text-pink-700 font-bold rounded-xl text-xs hover:bg-slate-100 transition shadow active:scale-95 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-down-to-bracket text-[10px]"></i> Nạp 100k
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Các ngân hàng phổ biến cho sinh viên -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+              <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-brand-600"></i>
+                <span>Các ngân hàng miễn phí dịch vụ cho sinh viên:</span>
+              </h3>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <button onclick="selectBankToLink('Vietcombank')" class="p-3.5 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex flex-col items-center gap-2 transition">
+                  <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white font-black flex items-center justify-center text-xs">VCB</div>
+                  <span class="font-semibold text-slate-700">Vietcombank</span>
+                </button>
+                <button onclick="selectBankToLink('Techcombank')" class="p-3.5 rounded-2xl border border-slate-200 hover:border-rose-500 hover:bg-rose-50/40 flex flex-col items-center gap-2 transition">
+                  <div class="w-10 h-10 rounded-xl bg-rose-600 text-white font-black flex items-center justify-center text-xs">TCB</div>
+                  <span class="font-semibold text-slate-700">Techcombank</span>
+                </button>
+                <button onclick="selectBankToLink('TPBank')" class="p-3.5 rounded-2xl border border-slate-200 hover:border-purple-500 hover:bg-purple-50/40 flex flex-col items-center gap-2 transition">
+                  <div class="w-10 h-10 rounded-xl bg-purple-600 text-white font-black flex items-center justify-center text-xs">TPB</div>
+                  <span class="font-semibold text-slate-700">TPBank</span>
+                </button>
+                <button onclick="selectBankToLink('BIDV')" class="p-3.5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 flex flex-col items-center gap-2 transition">
+                  <div class="w-10 h-10 rounded-xl bg-blue-700 text-white font-black flex items-center justify-center text-xs">BIDV</div>
+                  <span class="font-semibold text-slate-700">BIDV</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ==================== TAB 5: THỐNG KÊ ==================== -->
+        <div id="tab-statistics" class="tab-content hidden space-y-6">
+          <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-4xl mx-auto space-y-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-slate-800">Thống kê chi tiêu</h2>
+                <p class="text-xs text-slate-500">Đánh giá sức khỏe tài chính của bạn</p>
+              </div>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 leading-relaxed">
+              📊 <strong>Đánh giá:</strong> Hệ thống tự động khóa trần chi tiêu giúp bạn hoàn toàn an tâm không bị vung tay quá trán.
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+              <div class="p-4 bg-sky-50 rounded-2xl border border-sky-100">
+                <p class="text-[11px] text-slate-500">Định mức an toàn / ngày</p>
+                <p class="text-lg font-bold text-sky-700 mt-1" id="statAvgDay">71.000đ</p>
+              </div>
+              <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                <p class="text-[11px] text-slate-500">Tỷ lệ trong ngân sách</p>
+                <p class="text-lg font-bold text-emerald-700 mt-1">100%</p>
+              </div>
+              <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                <p class="text-[11px] text-slate-500">Số ngày an toàn</p>
+                <p class="text-lg font-bold text-indigo-700 mt-1">7 / 7 ngày</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 6: CÀI ĐẶT ==================== -->
+        <div id="tab-settings" class="tab-content hidden space-y-6">
+          <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm max-w-2xl mx-auto space-y-5">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+              <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-gear"></i>
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-slate-800">Cài đặt tài khoản sinh viên</h2>
+                <p class="text-xs text-slate-500">Cập nhật thông tin cá nhân</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Tên hiển thị</label>
+                <input type="text" id="settingNameInput" value="Nhi Yen" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Trường Đại Học</label>
+                <input type="text" value="Đại học Quốc Gia TP.HCM" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+              </div>
+              <div class="pt-2">
+                <button onclick="saveSettings()" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs sm:text-sm font-semibold transition active:scale-95 shadow">
+                  Lưu thay đổi
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== MODAL LIÊN KẾT NGÂN HÀNG ==================== -->
+  <div id="bankLinkModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-slate-800 text-base">Liên kết tài khoản ngân hàng</h3>
+        <button onclick="closeBankLinkModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Ngân hàng</label>
+          <input type="text" id="modalBankName" value="MB Bank" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Số tài khoản / Số thẻ</label>
+          <input type="text" id="modalBankAccNum" value="88996688" placeholder="Nhập số tài khoản" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Tên chủ tài khoản</label>
+          <input type="text" id="modalBankAccName" value="NHI YEN" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold uppercase">
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeBankLinkModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Hủy</button>
+          <button type="button" onclick="handleConfirmLinkBank()" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow transition">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL NẠP TIỀN ==================== -->
+  <div id="depositModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-slate-800 text-base">Nạp tiền vào Ví Sinh Viên</h3>
+        <button onclick="closeDepositModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Nguồn tiền nạp</label>
+          <select id="depositSource" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium">
+            <option value="MB Bank (*8899)">MB Bank (*8899) - Miễn phí</option>
+            <option value="Ví MoMo">Ví MoMo - Miễn phí</option>
+            <option value="Tiền mặt">Nộp tiền mặt</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Số tiền muốn nạp</label>
+          <input type="number" id="depositAmountInput" value="200000" step="50000" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-base font-bold text-brand-700">
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button onclick="setDepositAmount(100000)" class="flex-1 py-1.5 bg-slate-100 hover:bg-brand-50 hover:text-brand-600 text-[11px] font-semibold rounded-lg transition">+100k</button>
+          <button onclick="setDepositAmount(200000)" class="flex-1 py-1.5 bg-slate-100 hover:bg-brand-50 hover:text-brand-600 text-[11px] font-semibold rounded-lg transition">+200k</button>
+          <button onclick="setDepositAmount(500000)" class="flex-1 py-1.5 bg-slate-100 hover:bg-brand-50 hover:text-brand-600 text-[11px] font-semibold rounded-lg transition">+500k</button>
+        </div>
+
+        <button onclick="confirmDeposit()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-md mt-2 transition active:scale-95">
+          Xác nhận nạp ngay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST THÔNG BÁO -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-slate-900/95 text-white text-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 transition-all transform translate-y-20 opacity-0 pointer-events-none">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMsg">Thao tác thành công!</span>
+  </div>
+
+  <!-- ==================== JAVASCRIPT LOGIC CỐT LÕI ==================== -->
+  <script>
+    // State toàn cục
+    let currentUserName = "Nhi Yen";
+    let walletBalance = 500000;
+    let selectedCycle = "week"; // "week" hoặc "month"
+
+    let currentPlanData = {
+      budget: 500000,
+      cycle: "week",
+      totalExpense: 500000,
+      savings: 0,
+      weeks: []
+    };
+
+    // Khởi chạy khi DOM sẵn sàng
+    window.addEventListener('DOMContentLoaded', () => {
+      // Tự động phân bổ trước kế hoạch ban đầu
+      calculateBudgetStrictly();
+    });
+
+    // 1. ĐĂNG NHẬP / VÀO TRỰC TIẾP (BẤM LÀ VÀO NGAY 100%)
+    function handleLoginAction() {
+      const nameInput = document.getElementById('loginUsername');
+      if (nameInput && nameInput.value.trim()) {
+        currentUserName = nameInput.value.trim();
+      } else {
+        currentUserName = "Nhi Yen";
+      }
+      applyUserName();
+
+      const authModal = document.getElementById('authScreen');
+      if (authModal) {
+        authModal.style.display = 'none';
+        authModal.classList.add('hidden');
+      }
+      showToast(`Chào mừng ${currentUserName} đã vào Ví Sinh Viên! 🎉`);
+    }
+
+    function enterAppDirectly() {
+      handleLoginAction();
+    }
+
+    function handleLogout() {
+      const authModal = document.getElementById('authScreen');
+      if (authModal) {
+        authModal.style.display = 'flex';
+        authModal.classList.remove('hidden');
+      }
+      showToast("Đã đăng xuất.");
+    }
+
+    function applyUserName() {
+      const wel = document.getElementById('welcomeUserName');
+      if (wel) wel.innerText = currentUserName;
+      const sName = document.getElementById('sidebarUserName');
+      if (sName) sName.innerText = currentUserName;
+      const setInp = document.getElementById('settingNameInput');
+      if (setInp) setInp.value = currentUserName;
+      const bOwn = document.getElementById('bankCardOwner');
+      if (bOwn) bOwn.innerText = currentUserName.toUpperCase();
+      const ava = document.getElementById('userAvatarText');
+      if (ava) ava.innerText = currentUserName.substring(0, 2).toUpperCase();
+    }
+
+    function togglePasswordVisibility() {
+      const pass = document.getElementById('loginPassword');
+      const icon = document.getElementById('eyeIcon');
+      if (!pass || !icon) return;
+      if (pass.type === 'password') {
+        pass.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        pass.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    // 2. CHUYỂN TAB AN TOÀN
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('bg-brand-600', 'text-white', 'shadow-md');
+        btn.classList.add('text-slate-400');
+      });
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-brand-600', 'text-white', 'shadow-md');
+        activeBtn.classList.remove('text-slate-400');
+      }
+    }
+
+    // 3. TIỆN ÍCH TIỀN TỆ & ĐỒNG BỘ
+    function handleCurrencyInput(inputElem) {
+      let raw = inputElem.value.replace(/[^0-9]/g, '');
+      if (!raw) raw = '0';
+      let num = parseInt(raw, 10);
+      inputElem.value = formatNumberWithCommas(num);
+      document.getElementById('budgetAmount').value = num;
+      walletBalance = num;
+    }
+
+    function formatNumberWithCommas(n) {
+      return new Intl.NumberFormat('vi-VN').format(n);
+    }
+
+    function formatVND(n) {
+      if (n === undefined || isNaN(n)) return '0đ';
+      return new Intl.NumberFormat('vi-VN').format(Math.round(n)) + 'đ';
+    }
+
+    function animateNumber(elementId, targetNumber) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const startNumber = parseInt(el.innerText.replace(/[^0-9]/g, '')) || 0;
+      const duration = 250;
+      const startTime = performance.now();
+
+      function update(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const ease = 1 - (1 - progress) * (1 - progress);
+        const current = Math.round(startNumber + (targetNumber - startNumber) * ease);
+        el.innerText = formatVND(current);
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          el.innerText = formatVND(targetNumber);
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    function handleCycleChange(cycle) {
+      selectedCycle = cycle;
+      const budgetFormatted = document.getElementById('budgetAmountFormatted');
+      const budgetHidden = document.getElementById('budgetAmount');
+      const explain = document.getElementById('cycleExplainText');
+      const rentHint = document.getElementById('rentCycleHint');
+
+      if (cycle === 'month') {
+        if (parseInt(budgetHidden.value) <= 1000000) {
+          budgetHidden.value = 3500000;
+          budgetFormatted.value = formatNumberWithCommas(3500000);
+          walletBalance = 3500000;
+        }
+        if (explain) explain.innerText = "💡 Chu kỳ tháng: Tiền trọ và điện nước chỉ trừ 1 lần duy nhất trong cả tháng. Tiền ăn chia đều 4 tuần.";
+        if (rentHint) rentHint.innerText = "Cố định cả tháng (chỉ trừ 1 lần)";
+        document.getElementById('dashCycleHint').innerHTML = '<i class="fa-solid fa-calendar-days"></i> Chu kỳ: Theo tháng (4 tuần)';
+      } else {
+        if (parseInt(budgetHidden.value) > 2500000) {
+          budgetHidden.value = 500000;
+          budgetFormatted.value = formatNumberWithCommas(500000);
+          walletBalance = 500000;
+        }
+        if (explain) explain.innerText = "💡 Thuật toán cam kết: Tổng tiền chi tiêu 7 ngày tuyệt đối KHÔNG VƯỢT QUÁ số tiền bạn nhập.";
+        if (rentHint) rentHint.innerText = "Khoản đóng trong tuần nếu có";
+        document.getElementById('dashCycleHint').innerHTML = '<i class="fa-solid fa-arrow-trend-up"></i> Chu kỳ: Theo tuần (7 ngày)';
+      }
+    }
+
+    // ==========================================================
+    // 4. THUẬT TOÁN KHÓA TRẦN NGÂN SÁCH (HARD BUDGET CONSTRAINT)
+    // ==========================================================
+    function executeGeneratePlan() {
+      calculateBudgetStrictly();
+      switchTab('plan-result');
+      showToast(`Đã tạo kế hoạch khớp 100% ngân sách!`);
+    }
+
+    function calculateBudgetStrictly() {
+      const budget = parseFloat(document.getElementById('budgetAmount').value) || 0;
+      walletBalance = budget;
+
+      const hasFood = document.getElementById('cat_food').checked;
+      const hasTransport = document.getElementById('cat_transport').checked;
+      let weeklyGasInput = hasTransport ? (parseFloat(document.getElementById('transportWeeklyAmount').value) || 0) : 0;
+      const hasSavings = document.getElementById('cat_savings').checked;
+      const hasRent = document.getElementById('cat_rent').checked;
+      const rentAmount = hasRent ? (parseFloat(document.getElementById('rentAmount').value) || 0) : 0;
+      const hasUtilities = document.getElementById('cat_utilities').checked;
+      const utilitiesAmount = hasUtilities ? (parseFloat(document.getElementById('utilitiesAmount').value) || 0) : 0;
+      const hasStudy = document.getElementById('cat_study').checked;
+      const hasSocial = document.getElementById('cat_social').checked;
+      const hasPhone = document.getElementById('cat_phone').checked;
+      const hasCustom = document.getElementById('cat_custom').checked;
+
+      const isMonth = (selectedCycle === 'month');
+      const numWeeks = isMonth ? 4 : 1;
+
+      // 1. Kiểm tra nếu tổng khoản cứng vượt quá ngân sách
+      const warningBox = document.getElementById('budgetWarningBox');
+      const warningText = document.getElementById('budgetWarningText');
+      const fixedCostsTotal = rentAmount + utilitiesAmount;
+
+      if (fixedCostsTotal >= budget && fixedCostsTotal > 0) {
+        warningBox.classList.remove('hidden');
+        warningText.innerHTML = `Ngân sách của bạn (${formatVND(budget)}) không đủ chi trả khoản cố định (${formatVND(fixedCostsTotal)}). Vui lòng điều chỉnh lại!`;
+        return;
+      } else {
+        warningBox.classList.add('hidden');
+      }
+
+      // 2. Quỹ linh hoạt còn lại
+      let remainingFlexiblePool = budget - fixedCostsTotal;
+
+      // Tiết kiệm: chỉ trích nếu còn dư dả (trên 300k)
+      let savingsVal = 0;
+      if (hasSavings && remainingFlexiblePool > 300000) {
+        savingsVal = Math.min(Math.round((remainingFlexiblePool * 0.08) / 10000) * 10000, 150000);
+        remainingFlexiblePool -= savingsVal;
+      }
+
+      let weeklyPool = Math.floor(remainingFlexiblePool / numWeeks);
+
+      // 3. Phân bổ xăng xe theo tuần (ép tỷ lệ nếu ví mỏng 500k)
+      let actualWeeklyGas = 0;
+      if (hasTransport) {
+        if (weeklyPool <= 500000) {
+          // Với 500k/tuần: Xăng xe tối đa 50k - 60k/tuần
+          actualWeeklyGas = Math.min(weeklyGasInput, Math.round((weeklyPool * 0.12) / 5000) * 5000);
+        } else {
+          actualWeeklyGas = Math.min(weeklyGasInput, Math.round((weeklyPool * 0.18) / 5000) * 5000);
+        }
+      }
+
+      // 4. Các khoản lặt vặt (học tập, bạn bè, data)
+      let miscWeeklyPool = 0;
+      let activeMiscCount = (hasStudy ? 1 : 0) + (hasSocial ? 1 : 0) + (hasPhone ? 1 : 0) + (hasCustom ? 1 : 0);
+
+      if (activeMiscCount > 0) {
+        if (weeklyPool <= 500000) {
+          // Với 500k/tuần: Khoản lặt vặt khống chế tối đa 20.000đ - 30.000đ cả tuần
+          miscWeeklyPool = Math.min(25000, Math.floor(weeklyPool * 0.06));
+        } else {
+          miscWeeklyPool = Math.min(100000, Math.floor(weeklyPool * 0.15));
+        }
+      }
+
+      // 5. Toàn bộ số tiền còn lại ưu tiên cho ĂN UỐNG
+      let foodWeeklyPool = weeklyPool - actualWeeklyGas - miscWeeklyPool;
+      if (!hasFood) {
+        miscWeeklyPool += foodWeeklyPool;
+        foodWeeklyPool = 0;
+      }
+
+      // Chia đều cho 7 ngày (ép về mức 40k - 50k/ngày nếu tổng là 500k)
+      let dailyFoodBase = Math.floor((foodWeeklyPool / 7) / 1000) * 1000;
+      let dailyFoodRemainder = foodWeeklyPool - (dailyFoodBase * 7);
+
+      // Xăng chia cho 5 ngày đi học (T2 - T6)
+      let dailyGas = Math.floor((actualWeeklyGas / 5) / 1000) * 1000;
+      let gasRemainder = actualWeeklyGas - (dailyGas * 5);
+
+      let studyCost = hasStudy ? Math.round(miscWeeklyPool * 0.3) : 0;
+      let socialCost = hasSocial ? Math.round(miscWeeklyPool * 0.4) : 0;
+      let otherMisc = miscWeeklyPool - studyCost - socialCost;
+
+      const daysTemplate = [
+        { name: 'Thứ 2', short: '27/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 3', short: '28/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 4', short: '29/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 5', short: '30/10', isWeekend: false, payFixed: true },
+        { name: 'Thứ 6', short: '31/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 7', short: '01/11', isWeekend: true,  payFixed: false },
+        { name: 'CN',    short: '02/11', isWeekend: true,  payFixed: false }
+      ];
+
+      const weeksData = [];
+
+      for (let w = 1; w <= numWeeks; w++) {
+        const weekDays = [];
+        daysTemplate.forEach((d, idx) => {
+          let dayFood = hasFood ? dailyFoodBase : 0;
+          if (idx === 6) dayFood += dailyFoodRemainder;
+
+          let dayGas = (!d.isWeekend && hasTransport) ? dailyGas : 0;
+          if (idx === 4 && hasTransport) dayGas += gasRemainder;
+
+          let dayRent = (w === 1 && d.payFixed) ? rentAmount : 0;
+          let dayUtil = (w === 1 && d.payFixed) ? utilitiesAmount : 0;
+
+          let dayOther = 0;
+          if (hasSocial && idx === 5) dayOther += socialCost;
+          if (hasStudy && idx === 2) dayOther += studyCost;
+          if (idx === 0) dayOther += otherMisc;
+
+          let dayTotal = dayFood + dayGas + dayRent + dayUtil + dayOther;
+
+          weekDays.push({
+            dayName: d.name,
+            dateStr: isMonth ? `Tuần ${w}` : d.short,
+            food: dayFood,
+            gas: dayGas,
+            rent: dayRent,
+            util: dayUtil,
+            other: dayOther,
+            total: dayTotal
+          });
+        });
+        weeksData.push(weekDays);
+      }
+
+      let calculatedTotalExpense = 0;
+      weeksData.forEach(w => {
+        w.forEach(d => calculatedTotalExpense += d.total);
+      });
+
+      // LƯU STATE TOÀN BỘ
+      currentPlanData = {
+        budget: budget,
+        cycle: selectedCycle,
+        totalExpense: calculatedTotalExpense,
+        savings: savingsVal,
+        weeks: weeksData
+      };
+
+      const filterBox = document.getElementById('monthWeekFilterContainer');
+      const subtitle = document.getElementById('planScopeSubtitle');
+
+      if (isMonth) {
+        if (filterBox) filterBox.classList.remove('hidden');
+        if (subtitle) subtitle.innerText = "Chu kỳ: Theo tháng (4 tuần) • Tiền trọ & điện nước chỉ tính 1 lần";
+        const mSelect = document.getElementById('monthWeekSelect');
+        if (mSelect) mSelect.value = "1";
+      } else {
+        if (filterBox) filterBox.classList.add('hidden');
+        if (subtitle) subtitle.innerText = "Chi tiêu hợp lý – Đúng 100% trong ngân sách!";
+      }
+
+      renderSpecificWeek(1);
+
+      animateNumber('resTotalBudget', budget);
+      animateNumber('resTotalExpense', calculatedTotalExpense);
+      animateNumber('resSavingsAmount', savingsVal);
+
+      animateNumber('dashBalanceDisplay', budget);
+      animateNumber('dashSavingsDisplay', savingsVal);
+      const safePerDay = Math.floor((calculatedTotalExpense - (isMonth ? fixedCostsTotal : 0)) / (isMonth ? 28 : 7));
+      animateNumber('dashDailySafeDisplay', safePerDay);
+      
+      const sAvg = document.getElementById('statAvgDay');
+      if (sAvg) sAvg.innerText = formatVND(safePerDay);
+
+      updateCatAdvice(budget, selectedCycle);
+      updateAllocationBars(calculatedTotalExpense, fixedCostsTotal, actualWeeklyGas * numWeeks);
+    }
+
+    function enterAppDirectly() {
+      applyUserName();
+      document.getElementById('authScreen').classList.add('hidden');
+      showToast("Đã vào Ví Sinh Viên ở chế độ trải nghiệm!");
+    }
+
+    function handleLogout() {
+      document.getElementById('authScreen').classList.remove('hidden');
+      showToast("Đã đăng xuất.");
+    }
+
+    function applyUserName() {
+      document.getElementById('welcomeUserName').innerText = currentUserName;
+      document.getElementById('sidebarUserName').innerText = currentUserName;
+      document.getElementById('settingNameInput').value = currentUserName;
+      document.getElementById('bankCardOwner').innerText = currentUserName.toUpperCase();
+      document.getElementById('userAvatarText').innerText = currentUserName.substring(0, 2).toUpperCase();
+    }
+
+    function togglePasswordVisibility() {
+      const pass = document.getElementById('loginPassword');
+      const icon = document.getElementById('eyeIcon');
+      if (pass.type === 'password') {
+        pass.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        pass.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    // 2. CHUYỂN TAB
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('bg-brand-600', 'text-white', 'shadow-md');
+        btn.classList.add('text-slate-400');
+      });
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-brand-600', 'text-white', 'shadow-md');
+        activeBtn.classList.remove('text-slate-400');
+      }
+    }
+
+    // 3. TIỆN ÍCH TIỀN TỆ & ANIMATION
+    function handleCurrencyInput(inputElem) {
+      let raw = inputElem.value.replace(/[^0-9]/g, '');
+      if (!raw) raw = '0';
+      let num = parseInt(raw, 10);
+      inputElem.value = formatNumberWithCommas(num);
+      document.getElementById('budgetAmount').value = num;
+      walletBalance = num;
+    }
+
+    function formatNumberWithCommas(n) {
+      return new Intl.NumberFormat('vi-VN').format(n);
+    }
+
+    function formatVND(n) {
+      if (n === undefined || isNaN(n)) return '0đ';
+      return new Intl.NumberFormat('vi-VN').format(Math.round(n)) + 'đ';
+    }
+
+    function animateNumber(elementId, targetNumber) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const startNumber = parseInt(el.innerText.replace(/[^0-9]/g, '')) || 0;
+      const duration = 300;
+      const startTime = performance.now();
+
+      function update(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const ease = 1 - (1 - progress) * (1 - progress);
+        const current = Math.round(startNumber + (targetNumber - startNumber) * ease);
+        el.innerText = formatVND(current);
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          el.innerText = formatVND(targetNumber);
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Thay đổi chu kỳ
+    function handleCycleChange(cycle) {
+      selectedCycle = cycle;
+      const budgetFormatted = document.getElementById('budgetAmountFormatted');
+      const budgetHidden = document.getElementById('budgetAmount');
+      const explain = document.getElementById('cycleExplainText');
+      const rentHint = document.getElementById('rentCycleHint');
+
+      if (cycle === 'month') {
+        if (parseInt(budgetHidden.value) <= 1000000) {
+          budgetHidden.value = 3500000;
+          budgetFormatted.value = formatNumberWithCommas(3500000);
+          walletBalance = 3500000;
+        }
+        explain.innerText = "💡 Chu kỳ tháng: Tiền trọ và điện nước chỉ trừ 1 lần duy nhất trong cả tháng. Tiền ăn chia đều 4 tuần.";
+        rentHint.innerText = "Cố định cả tháng (chỉ trừ 1 lần)";
+        document.getElementById('dashCycleHint').innerHTML = '<i class="fa-solid fa-calendar-days"></i> Chu kỳ: Theo tháng (4 tuần)';
+      } else {
+        if (parseInt(budgetHidden.value) > 2500000) {
+          budgetHidden.value = 500000;
+          budgetFormatted.value = formatNumberWithCommas(500000);
+          walletBalance = 500000;
+        }
+        explain.innerText = "💡 Thuật toán cam kết: Tổng tiền chi tiêu 7 ngày tuyệt đối KHÔNG VƯỢT QUÁ số tiền bạn nhập.";
+        rentHint.innerText = "Khoản đóng trong tuần nếu có";
+        document.getElementById('dashCycleHint').innerHTML = '<i class="fa-solid fa-arrow-trend-up"></i> Chu kỳ: Theo tuần (7 ngày)';
+      }
+    }
+
+    // ==========================================================
+    // 4. THUẬT TOÁN "LIỆU CƠM GẮP MẮM" - KHÔNG BAO GIỜ VƯỢT NGÂN SÁCH
+    // ==========================================================
+    function executeGeneratePlan() {
+      const budget = parseFloat(document.getElementById('budgetAmount').value) || 0;
+      walletBalance = budget;
+
+      const hasFood = document.getElementById('cat_food').checked;
+      const hasTransport = document.getElementById('cat_transport').checked;
+      let weeklyGasInput = hasTransport ? (parseFloat(document.getElementById('transportWeeklyAmount').value) || 0) : 0;
+      const hasSavings = document.getElementById('cat_savings').checked;
+      const hasRent = document.getElementById('cat_rent').checked;
+      const rentAmount = hasRent ? (parseFloat(document.getElementById('rentAmount').value) || 0) : 0;
+      const hasUtilities = document.getElementById('cat_utilities').checked;
+      const utilitiesAmount = hasUtilities ? (parseFloat(document.getElementById('utilitiesAmount').value) || 0) : 0;
+      const hasStudy = document.getElementById('cat_study').checked;
+      const hasSocial = document.getElementById('cat_social').checked;
+      const hasPhone = document.getElementById('cat_phone').checked;
+      const hasCustom = document.getElementById('cat_custom').checked;
+
+      const isMonth = (selectedCycle === 'month');
+      const numWeeks = isMonth ? 4 : 1;
+
+      // 1. Kiểm tra tính khả thi của ngân sách đối với các khoản cố định (Trọ & Điện nước)
+      const warningBox = document.getElementById('budgetWarningBox');
+      const warningText = document.getElementById('budgetWarningText');
+      const fixedCostsTotal = rentAmount + utilitiesAmount;
+
+      if (fixedCostsTotal >= budget && fixedCostsTotal > 0) {
+        warningBox.classList.remove('hidden');
+        warningText.innerHTML = `Ngân sách của bạn (${formatVND(budget)}) không đủ để trả các khoản cố định (${formatVND(fixedCostsTotal)}). Vui lòng bỏ chọn tiền trọ/điện nước hoặc tăng số tiền!`;
+        return;
+      } else {
+        warningBox.classList.add('hidden');
+      }
+
+      // 2. Xác định quỹ linh hoạt còn lại
+      let remainingFlexiblePool = budget - fixedCostsTotal;
+
+      // 3. Trích tiết kiệm nếu được chọn (và ngân sách đủ rộng)
+      let savingsVal = 0;
+      if (hasSavings && remainingFlexiblePool > 300000) {
+        savingsVal = Math.min(Math.round(remainingFlexiblePool * 0.1 / 10000) * 10000, 200000);
+        remainingFlexiblePool -= savingsVal;
+      }
+
+      // Quỹ linh hoạt dành cho mỗi tuần
+      let weeklyPool = Math.floor(remainingFlexiblePool / numWeeks);
+
+      // 4. Phân bổ xăng xe tự động co giãn nếu ngân sách thấp
+      let actualWeeklyGas = 0;
+      if (hasTransport) {
+        if (weeklyPool <= 500000) {
+          // Với ngân sách 500k: Tiền xăng chỉ chiếm tối đa 10-12% (khoảng 50k - 60k) để ưu tiên tiền ăn
+          actualWeeklyGas = Math.min(weeklyGasInput, Math.round((weeklyPool * 0.12) / 5000) * 5000);
+        } else {
+          actualWeeklyGas = Math.min(weeklyGasInput, Math.round((weeklyPool * 0.18) / 5000) * 5000);
+        }
+      }
+
+      // Quỹ còn lại cho các khoản lặt vặt (học tập, bạn bè, 4G, custom)
+      let miscWeeklyPool = 0;
+      let activeMiscCount = (hasStudy ? 1 : 0) + (hasSocial ? 1 : 0) + (hasPhone ? 1 : 0) + (hasCustom ? 1 : 0);
+
+      if (activeMiscCount > 0) {
+        if (weeklyPool <= 500000) {
+          // Ngân sách 500k: Các khoản lặt vặt ép xuống tối đa 20k - 30k cả tuần để không bao giờ bị lố lên 600k
+          miscWeeklyPool = Math.min(30000, Math.floor(weeklyPool * 0.06));
+        } else {
+          miscWeeklyPool = Math.min(100000, Math.floor(weeklyPool * 0.15));
+        }
+      }
+
+      // 5. Toàn bộ phần tiền còn lại dành cho ĂN UỐNG (đảm bảo sinh viên có cái ăn)
+      let foodWeeklyPool = weeklyPool - actualWeeklyGas - miscWeeklyPool;
+      if (!hasFood) {
+        miscWeeklyPool += foodWeeklyPool;
+        foodWeeklyPool = 0;
+      }
+
+      // Chia đều tiền ăn cho 7 ngày (làm tròn đến hàng nghìn)
+      let dailyFoodBase = Math.floor((foodWeeklyPool / 7) / 1000) * 1000;
+      let dailyFoodRemainder = foodWeeklyPool - (dailyFoodBase * 7);
+
+      // Phân bổ xăng cho 5 ngày đi học chính (T2 - T6)
+      let dailyGas = Math.floor((actualWeeklyGas / 5) / 1000) * 1000;
+      let gasRemainder = actualWeeklyGas - (dailyGas * 5);
+
+      // Chia khoản lặt vặt vào cuối tuần hoặc giữa tuần
+      let studyCost = hasStudy ? Math.round(miscWeeklyPool * 0.3) : 0;
+      let socialCost = hasSocial ? Math.round(miscWeeklyPool * 0.4) : 0;
+      let otherMisc = miscWeeklyPool - studyCost - socialCost;
+
+      const daysTemplate = [
+        { name: 'Thứ 2', short: '27/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 3', short: '28/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 4', short: '29/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 5', short: '30/10', isWeekend: false, payFixed: true }, // Ngày đóng tiền trọ
+        { name: 'Thứ 6', short: '31/10', isWeekend: false, payFixed: false },
+        { name: 'Thứ 7', short: '01/11', isWeekend: true,  payFixed: false },
+        { name: 'CN',    short: '02/11', isWeekend: true,  payFixed: false }
+      ];
+
+      const weeksData = [];
+
+      for (let w = 1; w <= numWeeks; w++) {
+        const weekDays = [];
+        let weekSpentTracker = 0;
+
+        daysTemplate.forEach((d, idx) => {
+          let dayFood = hasFood ? dailyFoodBase : 0;
+          if (idx === 6) dayFood += dailyFoodRemainder; // Bù phần dư làm tròn vào ngày Chủ nhật
+
+          let dayGas = (!d.isWeekend && hasTransport) ? dailyGas : 0;
+          if (idx === 4 && hasTransport) dayGas += gasRemainder; // Bù dư xăng vào Thứ 6
+
+          // Tiền trọ và điện nước CHỈ ĐÓNG 1 LẦN Ở TUẦN 1
+          let dayRent = (w === 1 && d.payFixed) ? rentAmount : 0;
+          let dayUtil = (w === 1 && d.payFixed) ? utilitiesAmount : 0;
+
+          // Phân bổ lặt vặt
+          let dayOther = 0;
+          if (hasSocial && idx === 5) dayOther += socialCost; // Thứ 7
+          if (hasStudy && idx === 2) dayOther += studyCost;   // Thứ 4
+          if (idx === 0) dayOther += otherMisc;               // Thứ 2
+
+          let dayTotal = dayFood + dayGas + dayRent + dayUtil + dayOther;
+          weekSpentTracker += dayTotal;
+
+          weekDays.push({
+            dayName: d.name,
+            dateStr: isMonth ? `Tuần ${w}` : d.short,
+            food: dayFood,
+            gas: dayGas,
+            rent: dayRent,
+            util: dayUtil,
+            other: dayOther,
+            total: dayTotal
+          });
+        });
+
+        weeksData.push(weekDays);
+      }
+
+      // Tính tổng chi tiêu thực tế của toàn bộ kế hoạch
+      let calculatedTotalExpense = 0;
+      weeksData.forEach(w => {
+        w.forEach(d => calculatedTotalExpense += d.total);
+      });
+
+      // LƯU STATE
+      currentPlanData = {
+        budget: budget,
+        cycle: selectedCycle,
+        totalExpense: calculatedTotalExpense,
+        savings: savingsVal,
+        weeks: weeksData
+      };
+
+      // Cập nhật bộ lọc tuần nếu là tháng
+      const filterBox = document.getElementById('monthWeekFilterContainer');
+      const subtitle = document.getElementById('planScopeSubtitle');
+
+      if (isMonth) {
+        filterBox.classList.remove('hidden');
+        subtitle.innerText = "Chu kỳ: Theo tháng (4 tuần) • Tiền trọ & điện nước chỉ tính 1 lần";
+        document.getElementById('monthWeekSelect').value = "1";
+      } else {
+        filterBox.classList.add('hidden');
+        subtitle.innerText = "Chi tiêu hợp lý – Đúng 100% trong ngân sách!";
+      }
+
+      // Render bảng tuần 1
+      renderSpecificWeek(1);
+
+      // Cập nhật các thẻ tóm tắt
+      animateNumber('resTotalBudget', budget);
+      animateNumber('resTotalExpense', calculatedTotalExpense);
+      animateNumber('resSavingsAmount', savingsVal);
+
+      animateNumber('dashBalanceDisplay', budget);
+      animateNumber('dashSavingsDisplay', savingsVal);
+      const safePerDay = Math.floor((calculatedTotalExpense - (isMonth ? fixedCostsTotal : 0)) / (isMonth ? 28 : 7));
+      animateNumber('dashDailySafeDisplay', safePerDay);
+      document.getElementById('statAvgDay').innerText = formatVND(safePerDay);
+
+      // Cập nhật lời khuyên của Mèo theo mức tiền thực tế
+      updateCatAdvice(budget, selectedCycle);
+
+      // Cập nhật thanh tỷ lệ Dashboard
+      updateAllocationBars(calculatedTotalExpense, fixedCostsTotal, actualWeeklyGas * numWeeks);
+
+      // Chuyển tab sang bảng kế hoạch
+      switchTab('plan-result');
+      showToast(`Đã tạo kế hoạch chuẩn ngân sách ${formatVND(budget)}!`);
+    }
+
+    // Render bảng chi tiết từng ngày
+    function renderSpecificWeek(weekNum) {
+      const weekIndex = weekNum - 1;
+      const days = currentPlanData.weeks[weekIndex] || currentPlanData.weeks[0];
+      if (!days) return;
+
+      document.getElementById('planTableTitle').innerText = (currentPlanData.cycle === 'month')
+        ? `Kế hoạch chi tiêu từng ngày (Tuần ${weekNum} / 4)`
+        : "Kế hoạch chi tiêu từng ngày";
+
+      let html = "";
+      let sumFood = 0, sumGas = 0, sumRent = 0, sumUtil = 0, sumOther = 0, sumTotal = 0;
+
+      days.forEach(item => {
+        sumFood += item.food;
+        sumGas += item.gas;
+        sumRent += item.rent;
+        sumUtil += item.util;
+        sumOther += item.other;
+        sumTotal += item.total;
+
+        html += `
+          <tr class="hover:bg-blue-50/50 transition">
+            <td class="py-3.5 px-4 font-semibold text-slate-800">
+              ${item.dayName} <span class="text-xs font-normal text-slate-400">(${item.dateStr})</span>
+            </td>
+            <td class="py-3.5 px-4 text-center text-slate-700 font-medium">${item.food > 0 ? formatVND(item.food) : '-'}</td>
+            <td class="py-3.5 px-4 text-center text-slate-700 font-medium">${item.gas > 0 ? formatVND(item.gas) : '-'}</td>
+            <td class="py-3.5 px-4 text-center ${item.rent > 0 ? 'font-bold text-purple-700 bg-purple-50 rounded-lg' : 'text-slate-400'}">
+              ${item.rent > 0 ? formatVND(item.rent) : '-'}
+            </td>
+            <td class="py-3.5 px-4 text-center ${item.util > 0 ? 'font-bold text-sky-700 bg-sky-50 rounded-lg' : 'text-slate-400'}">
+              ${item.util > 0 ? formatVND(item.util) : '-'}
+            </td>
+            <td class="py-3.5 px-4 text-center text-slate-700">${item.other > 0 ? formatVND(item.other) : '-'}</td>
+            <td class="py-3.5 px-4 text-right font-extrabold text-slate-900">${formatVND(item.total)}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('dailyPlanTableBody').innerHTML = html;
+
+      // Cập nhật chân bảng (TỔNG CỘNG)
+      document.getElementById('footFoodTotal').innerText = formatVND(sumFood);
+      document.getElementById('footTransportTotal').innerText = formatVND(sumGas);
+      document.getElementById('footRentTotal').innerText = sumRent > 0 ? formatVND(sumRent) : '-';
+      document.getElementById('footUtilTotal').innerText = sumUtil > 0 ? formatVND(sumUtil) : '-';
+      document.getElementById('footOtherTotal').innerText = formatVND(sumOther);
+      document.getElementById('footGrandTotal').innerText = formatVND(sumTotal);
+      document.getElementById('footCycleLabel').innerText = (currentPlanData.cycle === 'month')
+        ? `TỔNG TUẦN ${weekNum}`
+        : "TỔNG CỘNG";
+
+      // Cập nhật cam kết
+      document.getElementById('planSummaryCommitment').innerHTML = `
+        Tổng chi tuần này là <strong>${formatVND(sumTotal)}</strong>, hoàn toàn nằm trọn trong ngân sách không lo bị thâm hụt! 💙
+      `;
+    }
+
+    // Cập nhật thanh tỷ lệ Dashboard
+    function updateAllocationBars(totalExpense, fixed, gas) {
+      if (totalExpense <= 0) return;
+      
+      let foodPct = Math.round(((totalExpense - fixed - gas) / totalExpense) * 100);
+      let gasPct = Math.round((gas / totalExpense) * 100);
+      let fixedPct = Math.round((fixed / totalExpense) * 100);
+      let miscPct = 100 - foodPct - gasPct - fixedPct;
+      if (miscPct < 0) miscPct = 0;
+
+      document.getElementById('barFood').style.width = foodPct + '%';
+      document.getElementById('barTransport').style.width = gasPct + '%';
+      document.getElementById('barFixed').style.width = fixedPct + '%';
+      document.getElementById('barSavings').style.width = miscPct + '%';
+
+      document.getElementById('legFood').innerText = foodPct + '%';
+      document.getElementById('legTransport').innerText = gasPct + '%';
+      document.getElementById('legLiving').innerText = fixedPct + '%';
+      document.getElementById('legSavings').innerText = miscPct + '%';
+    }
+
+    // Cập nhật lời thoại của Mèo Sinh Viên
+    function updateCatAdvice(budget, cycle) {
+      const title = document.getElementById('catAdviceTitle');
+      const body = document.getElementById('catAdviceBody');
+      const cheer = document.getElementById('catCheerText');
+
+      if (cycle === 'week' && budget <= 500000) {
+        title.innerText = "Chế độ chi tiêu sinh viên tiết kiệm! ⚡";
+        body.innerText = "Với 500k cho 7 ngày, tiền ăn đã được ép vừa vặn (khoảng 50k/ngày). Tự cắm cơm và hạn chế trà sữa là sống khỏe cả tuần nha!";
+        cheer.innerText = "Cố lên, khéo ăn thì no khéo co thì ấm! 😸";
+      } else if (cycle === 'week' && budget > 1000000) {
+        title.innerText = "Tài chính tuần này khá rủng rỉnh! 🌟";
+        body.innerText = "Bạn có mức chi tiêu thoải mái. Đừng quên trích một phần vào quỹ tiết kiệm hoặc nạp Data 4G học bài nhé!";
+        cheer.innerText = "Tiêu thông minh, tích lũy giỏi! 💙";
+      } else {
+        title.innerText = "Bạn đang chi tiêu rất hợp lý! 🎉";
+        body.innerText = "Ngân sách đã được khóa trần an toàn. Hãy tuân thủ theo bảng kế hoạch từng ngày để cuối tháng vẫn rủng rỉnh ví nhé!";
+        cheer.innerText = "Cố gắng giữ vững phong độ nhé 💙";
+      }
+    }
+
+    // 5. LIÊN KẾT NGÂN HÀNG & NẠP TIỀN
+    function openBankLinkModal() {
+      document.getElementById('bankLinkModal').classList.remove('hidden');
+    }
+
+    function closeBankLinkModal() {
+      document.getElementById('bankLinkModal').classList.add('hidden');
+    }
+
+    function selectBankToLink(bankName) {
+      document.getElementById('modalBankName').value = bankName;
+      openBankLinkModal();
+    }
+
+    function handleConfirmLinkBank() {
+      const bName = document.getElementById('modalBankName').value || "Ngân hàng";
+      const bAcc = document.getElementById('modalBankAccNum').value || "8899";
+      const bHolder = document.getElementById('modalBankAccName').value || currentUserName;
+
+      const container = document.getElementById('linkedAccountsList');
+      const card = document.createElement('div');
+      card.className = "p-6 rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 text-white shadow-xl relative overflow-hidden flex flex-col justify-between h-52 border border-slate-700";
+      card.innerHTML = `
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center font-black text-xs">${bName.substring(0,3).toUpperCase()}</span>
+            <span class="font-bold text-sm">${bName}</span>
+          </div>
+          <span class="text-[10px] bg-emerald-400/20 text-emerald-300 border border-emerald-400/40 px-2.5 py-0.5 rounded-full font-semibold">Đã liên kết</span>
+        </div>
+        <div class="relative z-10">
+          <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Số tài khoản sinh viên</p>
+          <p class="text-xl font-mono tracking-widest font-bold mt-1">•••• •••• •••• ${bAcc.slice(-4) || '8899'}</p>
+        </div>
+        <div class="flex items-center justify-between relative z-10 pt-3 border-t border-white/10 text-xs">
+          <div>
+            <span class="text-[10px] text-slate-400">Chủ tài khoản: </span>
+            <span class="font-bold">${bHolder.toUpperCase()}</span>
+          </div>
+          <button onclick="quickDepositFromBank('${bName}', 200000)" class="px-3 py-1.5 bg-white text-slate-900 font-bold rounded-xl text-xs hover:bg-slate-100 transition shadow active:scale-95">
+            Nạp 200k
+          </button>
+        </div>
+      `;
+      container.appendChild(card);
+      closeBankLinkModal();
+      showToast(`Đã liên kết thành công tài khoản ${bName}!`);
+    }
+
+    function openDepositModal() {
+      document.getElementById('depositModal').classList.remove('hidden');
+    }
+
+    function closeDepositModal() {
+      document.getElementById('depositModal').classList.add('hidden');
+    }
+
+    function setDepositAmount(n) {
+      document.getElementById('depositAmountInput').value = n;
+    }
+
+    function confirmDeposit() {
+      const amt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
+      const src = document.getElementById('depositSource').value;
+      if (amt > 0) {
+        quickDepositFromBank(src, amt);
+        closeDepositModal();
+      }
+    }
+
+    function quickDepositFromBank(sourceName, amount) {
+      walletBalance += amount;
+      document.getElementById('budgetAmount').value = walletBalance;
+      document.getElementById('budgetAmountFormatted').value = formatNumberWithCommas(walletBalance);
+      
+      animateNumber('dashBalanceDisplay', walletBalance);
+      executeGeneratePlan();
+      showToast(`Đã nạp ${formatVND(amount)} từ ${sourceName} vào ví thành công!`);
+    }
+
+    // 6. TIỆN ÍCH KHÁC
+    function saveSettings() {
+      const val = document.getElementById('settingNameInput').value.trim();
+      if (val) {
+        currentUserName = val;
+        applyUserName();
+        showToast("Đã lưu thông tin cài đặt!");
+      }
+    }
+
+    function changePeriod(val) {
+      showToast(`Đã chuyển kỳ: ${val === 'current' ? 'Tuần này' : (val === 'next' ? 'Tuần tới' : 'Cả tháng')}`);
+    }
+
+    function toggleMobileMenu() {
+      const aside = document.getElementById('appSidebar');
+      aside.classList.toggle('hidden');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      t.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        t.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
